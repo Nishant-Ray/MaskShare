@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <title>MaskShare</title>
+</head>
+
+<style>
+    body {
+        /* background: linear-gradient(90deg, rgb(13, 42, 172) 0%, rgba(0,212,255,1) 100%); */
+        background: linear-gradient(90deg, #db0000, #ff2828, #d52323, #d52323);
+        background-size: 400% 400%;
+        animation: gradient 10s ease infinite;
+        
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        25% {
+            background-position: 50% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        75% {
+            background-position: 50% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    #wrap {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        text-align: center;
+        padding: 25px 25px;
+        position: fixed;
+        top: 100px;
+        left: 27.5%;
+        width: 45%; /* 600 */
+        height: 80%;
+        margin: auto;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .redButton {
+        margin-left: 40%;
+        background-color:#ff2121;
+        -webkit-border-top-left-radius:28px;
+        -moz-border-radius-topleft:28px;
+        border-top-left-radius:28px;
+        -webkit-border-top-right-radius:28px;
+        -moz-border-radius-topright:28px;
+        border-top-right-radius:28px;
+        -webkit-border-bottom-right-radius:28px;
+        -moz-border-radius-bottomright:28px;
+        border-bottom-right-radius:28px;
+        -webkit-border-bottom-left-radius:28px;
+        -moz-border-radius-bottomleft:28px;
+        border-bottom-left-radius:28px;
+        text-indent:0;
+        border:1px #ffffff;
+        display:inline-block;
+        color:#ffffff;
+        font-size:20px;
+        font-weight:bold;
+        font-style:normal;
+        height:50px;
+        line-height:50px;
+        width:120px;
+        text-decoration:none;
+        text-align:center;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .redButton:hover {
+        text-decoration: none;
+        color: #ff2121;
+        background-color: white;
+    }
+
+    .whiteButton {
+        margin-left: 40%;
+        background-color:white;
+        -webkit-border-top-left-radius:28px;
+        -moz-border-radius-topleft:28px;
+        border-top-left-radius:28px;
+        -webkit-border-top-right-radius:28px;
+        -moz-border-radius-topright:28px;
+        border-top-right-radius:28px;
+        -webkit-border-bottom-right-radius:28px;
+        -moz-border-radius-bottomright:28px;
+        border-bottom-right-radius:28px;
+        -webkit-border-bottom-left-radius:28px;
+        -moz-border-radius-bottomleft:28px;
+        border-bottom-left-radius:28px;
+        text-indent:0;
+        border:1px solid #ff2121;
+        display:inline-block;
+        color:#ff2121;
+        font-size:20px;
+        height:50px;
+        line-height:50px;
+        width:110px;
+        text-decoration:none;
+        text-align:center;
+        font-weight: bold;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .whiteButton:hover {
+        text-decoration: none;
+        color: white;
+        background-color: rgba(255, 41, 38, 0);
+        border: none;
+    }
+
+    .title {
+        padding-left: 30px;
+        line-height: 90px;
+        font-size: 40px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .title:hover {
+        text-decoration: none;
+        color: white;
+    }
+    
+</style>
+
+
+<body>
+    
+    <a href="/" class="title">MaskShare</a>
+
+    <a href="/login" class="whiteButton" style="float: right; margin-top: 20px; margin-right: 20px;">Login</a>
+    
+    
+    
+    <div id="wrap">
+        <BR>
+        <h4 style="text-align: center">Create an Account</h4>
+        <p style="text-align: center">
+            If you already have an account,
+            <a class="link" style="color: #ff2828;" href="/login">login here!</a>
+        </p>
+            
+        <form class="needs-validation" novalidate action="{{ url_for('register') }}" method="post">
+            <div class="form-group" style="text-align: left;">
+                <div>
+                    <div style="padding: 0% 10%;">
+                        <label for="exampleInputEmail1">Name</label>
+                        <input type="text" class="form-control" name="nm" id="validationCustom01" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please provide a valid email.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="text-align: left;">
+                <div>
+                    <div style="padding: 0% 10%;">
+                        <label for="exampleInputEmail1">Phone Number</label>
+                        <input type="tel" class="form-control" name="ph" id="validationCustom02" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please provide a valid email.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="text-align: left;">
+                <div>
+                    <div style="padding: 0% 10%;">
+                        <label for="exampleInputEmail1">Email</label>
+                        <input type="text" class="form-control" name="em" id="validationCustom03" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please provide a valid email.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="padding: 0% 10%; text-align: left;">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" name="pw" id="validationCustom04" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid password.
+                    </div>
+                </div>
+                <div style="padding: 30px 170px 10px 0px">
+                    <button type="submit" class="redButton">Register</button>
+                </div>
+            </div>
+        </form>
+        
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+            
+        </div>
+        
+        <script>
+            
+            (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+                });
+            }, false);
+            })();
+        </script>
+        
+        
+        
+        
+        
+        
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        
+        
+    </body>
+    </html>

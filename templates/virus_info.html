@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <title>MaskShare</title>
+</head>
+
+<style>
+
+    body {
+        
+        background-color: #ff3f3f;
+        background: linear-gradient(90deg, #db0000, #ff2828, #d52323, #d52323);
+        background-size: 400% 400%;
+        animation: gradient 10s ease infinite;
+       
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        25% {
+            background-position: 50% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        75% {
+            background-position: 50% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .whiteButton {
+        /* margin-left: 40%; */
+        background-color:white;
+        -webkit-border-top-left-radius:28px;
+        -moz-border-radius-topleft:28px;
+        border-top-left-radius:28px;
+        -webkit-border-top-right-radius:28px;
+        -moz-border-radius-topright:28px;
+        border-top-right-radius:28px;
+        -webkit-border-bottom-right-radius:28px;
+        -moz-border-radius-bottomright:28px;
+        border-bottom-right-radius:28px;
+        -webkit-border-bottom-left-radius:28px;
+        -moz-border-radius-bottomleft:28px;
+        border-bottom-left-radius:28px;
+        text-indent:0;
+        border:1px solid #ff2121;
+        display:inline-block;
+        color:#ff2121;
+        font-size:20px;
+        height:50px;
+        line-height:50px;
+        width:120px;
+        text-decoration:none;
+        text-align:center;
+        font-weight: bold;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .whiteButton:hover {
+        text-decoration: none;
+        color: white;
+        background-color: rgba(255, 41, 38, 0);
+        border: none;
+    }
+
+    .redButton {
+        margin-left: 35%;
+        background-color:#ff2121;
+        -webkit-border-top-left-radius:28px;
+        -moz-border-radius-topleft:28px;
+        border-top-left-radius:28px;
+        -webkit-border-top-right-radius:28px;
+        -moz-border-radius-topright:28px;
+        border-top-right-radius:28px;
+        -webkit-border-bottom-right-radius:28px;
+        -moz-border-radius-bottomright:28px;
+        border-bottom-right-radius:28px;
+        -webkit-border-bottom-left-radius:28px;
+        -moz-border-radius-bottomleft:28px;
+        border-bottom-left-radius:28px;
+        text-indent:0;
+        border: 10px blue;
+        display:inline-block;
+        color:#ffffff;
+        font-size:20px;
+        font-weight:bold;
+        font-style:normal;
+        height:50px;
+        line-height:50px;
+        width:140px;
+        text-decoration:none;
+        text-align:center;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .redButton:hover {
+        text-decoration: none;
+        color: #ff2121;
+        background-color: white;
+    }
+
+    .title {
+        /* padding-left: 30px;
+        line-height: 90px; */
+        font-size: 40px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .title:hover {
+        text-decoration: none;
+        color: white;
+    }
+
+    .header {
+        text-align: center;
+        color: white;
+        padding-bottom: 75px;
+        padding-top: 50px;
+    }
+
+    .subbody {
+        background-color: white;
+        width: 100%;
+        height: 1500px;
+        padding-top: 40px;
+        padding-left: 50px;
+    }
+
+    .card {
+        /* Add shadows to create the "card" effect */
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        width: 40%;
+        margin: auto;
+        float: left;
+    }
+
+    /* On mouse-over, add a deeper shadow */
+    .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        
+    }
+
+    /* Add some padding inside the card container */
+    .container {
+        padding: 2px 16px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 40%;
+    }
+    
+    td, th {
+        /* border: 1px solid #ff0000; */
+        text-align: left;
+        padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #ff3f3f3d;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #ff000027;
+    }
+
+    #map {
+        width: 1416px;
+        height: 600px;
+        background-color: rgb(170, 218, 255);
+    }
+    
+</style>
+
+
+<body>
+    <nav style="padding-top: 20px; padding-left: 20px;">
+        <a href="/" class="title">MaskShare</a>
+        <a href="/logout" class="whiteButton" style="float: right; margin-right: 20px;">Logout</a>
+        <a href="/mask_info" class="whiteButton" style="float: right; margin-right: 20px; width: 140px;">Mask Info</a>
+        <a href="/" class="whiteButton" style="float: right; margin-right: 20px; width: 120px;">Home</a>
+    </nav>
+
+    <div class="header">
+        <h1 style="font-size: 50px; font-weight: bold;">Virus Info</h1>
+        <h5 style="font-style: italic;">Stay up to date with all the latest information about Covid-19.</h5>
+    </div>
+    
+
+    <div class="subbody">
+
+        <div id="map"></div>
+
+        <br>
+        
+        <div style="float: left; width: 40%; margin-right: 40px;">
+            <h5>What is it?</h5>
+
+            <p>Coronavirus disease 2019 (COVID-19) is an infectious disease caused by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2). The disease was first identified in 2019 in Wuhan, China, and has since spread globally, resulting in the 2019–20 coronavirus pandemic. Common symptoms include fever, cough, and shortness of breath. Muscle pain, sputum production and sore throat are less common. While the majority of cases result in mild symptoms, some progress to severe pneumonia and multi-organ failure. The rate of deaths per number of diagnosed cases is on average 3.4%, ranging from 0.2% in those less than 20 to approximately 15% in those over 80 years old. These percentage figures do not take into account unconfirmed cases, which would be significantly lower.</p>
+            <p>The infection is typically spread from one person to another via respiratory droplets produced during coughing and sneezing. Time from exposure to onset of symptoms is generally between two and 14 days, with an average of five days. The standard method of diagnosis is by reverse transcription polymerase chain reaction (rRT-PCR) from a nasopharyngeal swab or throat swab. The infection can also be diagnosed from a combination of symptoms, risk factors and a chest CT scan showing features of pneumonia.</p>       
+            <p>Recommended measures to prevent infection include frequent hand washing, maintaining distance from others, and not touching one's face. The use of masks is recommended for those who suspect they have the virus and their caregivers but not the general public. There is no vaccine or specific antiviral treatment for COVID-19. Management involves treatment of symptoms, supportive care, isolation, and experimental measures.</p>
+            <p>The World Health Organization (WHO) declared the 2019–20 coronavirus outbreak a pandemic and a Public Health Emergency of International Concern (PHEIC). Evidence of local transmission of the disease has been found in many countries across all six WHO regions.</p>
+        </div>
+        
+        <img style="width: 775px; height: 313.75px;" src="/map" alt="Covid Map">
+
+        <br><br><br>
+
+        <h5>How Can I Get Tested?</h5>
+        <p>Visit this <a href="https://findahealthcenter.hrsa.gov/" target="_blank">webpage</a>.</p>
+        <br>
+        
+        <h5>Quick Facts</h5>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Number of Cases (Global)</th>
+            </tr>
+            <tr>
+                <td>Total Deceased</td>
+                <td>108,486 (6.11% Fatality Rate)</td>
+            </tr>
+            <tr>
+                <td>Total Recovered</td>
+                <td>406,874 (22.9% Recovery Rate)</td>
+            </tr>
+            <tr>
+                <td>Total Serious Condition</td>
+                <td>42,232 (2.38% Serious Condition)</td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td>Total Cases</td>
+                <td>1,774,747 (0.0228% Case Rate)</td>
+            </tr>
+        </table>
+        <br>
+        
+    </div>
+
+    <footer style="background-color: rgb(56, 56, 56); height: 230px; padding-top: 50px; padding-left: 20px;">
+        <h6 style="color: white;">Made by Nishant Ray and Pranav Harakere - 2020</h6>
+        <br>
+        <h6 style="color: white; text-align: left;">References:</h6>
+        <ul style="color: white; text-align: left;">
+            <li>
+                <a href="https://www.cdc.gov/coronavirus/2019-nCoV/index.html">CDC</a>
+            </li>
+            <li>
+                <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019">WHO</a>
+            </li>
+            <li>
+                <a href="https://coronavirus.gov">Official Coronavirus Webpage</a>
+            </li>
+        </ul>
+    </footer>
+
+    <script>
+
+        var map;
+
+        function initMap() {
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status == 200){
+                
+                    var str = this.responseText;
+                    //console.log(str);
+                    
+                    updateMap(str, "New Mexico");
+                
+                }
+            };
+            
+            xhttp.open("GET", "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv");
+            xhttp.send();
+            
+            var usa = new google.maps.LatLng(36.778259, -100.417931);
+            
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 4,
+                center: usa,
+                mapTypeControl: true,
+                panControl: false,
+                zoomControl: true,
+                streetViewControl: false
+            });
+            
+        }
+
+        function updateMap(text, state) {
+            
+            var countyAddresses = [[]];
+            
+            var lines = text.split('\n');
+            lines.shift();
+            //lines.splice(15, lines.length - 15);
+            
+            outer: for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].substring(11);
+            const countyName = line.substring(0, line.indexOf(","));
+            const stateName = line.substring(line.indexOf(",") + 1, line.indexOf(",", line.indexOf(",") + 1));
+            let cases = line.substring(line.lastIndexOf(",", line.lastIndexOf(",") - 1) + 1, line.lastIndexOf(","));
+            let deaths = line.substring(line.lastIndexOf(",") + 1);
+            
+            cases = parseFloat(cases);
+            deaths = parseFloat(deaths);
+            
+            const address = [countyName, stateName, cases, deaths];
+            
+            // Santa Clara,California,06085,956,33
+
+            //if(stateName != state) continue;
+
+            inner: for(let j = 0; j < countyAddresses.length; j++){
+                if(countyAddresses[j][0] == address[0] && countyAddresses[j][1] == address[1]){
+                countyAddresses[j][2] = address[2];
+                countyAddresses[j][3] = address[3];
+                continue outer;
+                
+                }
+            }
+
+            //if(!countyAddresses.includes(address) && stateName == state){
+                countyAddresses.push(address)
+            //}
+            }
+            
+            //console.log(countyAddresses)
+            
+
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+                
+                var txt = this.responseText;
+                //console.log(txt);
+                
+                addCircles(txt, countyAddresses);
+                
+            }
+            };
+            
+            req.open("GET", "http://127.0.0.1:5000/counties");
+            req.send();
+            
+        }
+
+        function addCircles(str, infectedCounties) {
+            
+
+            var countyCoords = str.split("\n");
+
+            var stateAbbs = new Map();
+            stateAbbs.set("AL", "Alabama");
+            stateAbbs.set("AK", "Alaska");
+            stateAbbs.set("AZ", "Arizona");
+            stateAbbs.set("AR", "Arkansas");
+            stateAbbs.set("CA", "California");
+            stateAbbs.set("CO", "Colorado");
+            stateAbbs.set("CT", "Connecticut");
+            stateAbbs.set("DE", "Delaware");
+            stateAbbs.set("FL", "Florida");
+            stateAbbs.set("GA", "Georgia");
+            stateAbbs.set("HI", "Hawaii");
+            stateAbbs.set("ID", "Idaho");
+            stateAbbs.set("IL", "Illinois");
+            stateAbbs.set("IN", "Indiana");
+            stateAbbs.set("IA", "Iowa");
+            stateAbbs.set("KS", "Kansas");
+            stateAbbs.set("KY", "Kentucky");
+            stateAbbs.set("LA", "Louisiana");
+            stateAbbs.set("ME", "Maine");
+            stateAbbs.set("MD", "Maryland");
+            stateAbbs.set("MA", "Massachusetts");
+            stateAbbs.set("MI", "Michigan");
+            stateAbbs.set("MN", "Minnesota");
+            stateAbbs.set("MS", "Mississippi");
+            stateAbbs.set("MO", "Missouri");
+            stateAbbs.set("MT", "Montana");
+            stateAbbs.set("NE", "Nebraska");
+            stateAbbs.set("NV", "Nevada");
+            stateAbbs.set("NH", "New Hampshire");
+            stateAbbs.set("NJ", "New Jersey");
+            stateAbbs.set("NM", "New Mexico");
+            stateAbbs.set("NY", "New York");
+            stateAbbs.set("NC", "North Carolina");
+            stateAbbs.set("ND", "North Dakota");
+            stateAbbs.set("OH", "Ohio");
+            stateAbbs.set("OK", "Oklahoma");
+            stateAbbs.set("OR", "Oregon");
+            stateAbbs.set("PA", "Pennsylvania");
+            stateAbbs.set("RI", "Rhode Island");
+            stateAbbs.set("SC", "South Carolina");
+            stateAbbs.set("SD", "South Dakota");
+            stateAbbs.set("TN", "Tennessee");
+            stateAbbs.set("TX", "Texas");
+            stateAbbs.set("UT", "Utah");
+            stateAbbs.set("VT", "Vermont");
+            stateAbbs.set("VA", "Virginia");
+            stateAbbs.set("WA", "Washington");
+            stateAbbs.set("WV", "West Virginia");
+            stateAbbs.set("WI", "Wisconsin");
+            stateAbbs.set("WY", "Wyoming");
+
+            var max = 0;
+            var addressBig
+
+            for (let i = 0; i < infectedCounties.length; i++) {
+            let infectedCountyName = infectedCounties[i][0] + " County";
+            const infectedStateName = infectedCounties[i][1];
+            const numCases = infectedCounties[i][2];
+            const numDeaths = infectedCounties[i][3];
+
+            if(numCases > max){
+                max = numCases;
+                addressBig = infectedCountyName + " County, " + infectedStateName;
+            }
+
+            for (let j = 0; j < countyCoords.length; j++) {
+                const line = countyCoords[j];
+                let county = line.substring(0, line.indexOf(","));
+                let state = line.substring(line.indexOf(",") + 2, line.indexOf(",") + 4);
+                state = stateAbbs.get(state);
+
+                if(infectedCountyName == county && infectedStateName == state){
+                let latLngStr = line.substring(line.indexOf("=") + 2);
+                let x = parseFloat(latLngStr.substring(0, latLngStr.indexOf(",")));
+                let y = parseFloat(latLngStr.substring(latLngStr.indexOf(",") + 2));
+
+                var latLng = {lat: x, lng: y};
+
+                //const color = "#" + Math.floor(Math.random()*16777215).toString(16);
+
+                // avg county area = 2519.122 km
+                
+                // var coronaCircle = new google.maps.Circle({
+                //   strokeColor: '#ff0000',
+                //   strokeOpacity: 0.2,
+                //   strokeWeight: 1.5,
+                //   fillColor: "#ff0000",
+                //   fillOpacity: numCases / 50000,
+                //   map: map,
+                //   center: latLng,
+                //   radius: Math.sqrt(2519122000 / Math.PI),
+                //   clickable: true
+                // });
+                
+                var coronaCircle = new google.maps.Circle({
+                    strokeColor: '#ff0000',
+                    strokeOpacity: 0.2,
+                    strokeWeight: 1.5,
+                    fillColor: "#ff0000",
+                    fillOpacity: 0.1,
+                    map: map,
+                    center: latLng,
+                    radius: 2000 * Math.sqrt(numCases),
+                    clickable: true
+                });
+
+                //var text = infectedCountyName + ", " + infectedStateName + "\nCases: " + numCases + "\nDeaths: " + numDeaths;
+
+                
+
+                if(infectedStateName == "Louisiana") {
+                    infectedCountyName = infectedCountyName.substring(0, infectedCountyName.indexOf("County")) + "Parish";
+                }
+
+                let contentString = '<div id="content">'+
+                    '<div id="siteNotice">'+
+                    '</div>'+
+                    '<br>' +
+                    '<h6 id="firstHeading" class="firstHeading">' + infectedCountyName + ', ' + infectedStateName + '</h6>'+
+                    '<div id="bodyContent">'+
+                    '<p><b>Number of Cases: </b>' + numCases + '</p>' +
+                    '<p><b>Number of Deaths: </b>' + numDeaths + '</p>'+
+                    '</div>'+
+                    '</div>';
+                        
+                //   console.log(infectedCountyName + ", " + infectedStateName + ": " + numCases + " cases.");
+                    
+                let infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                google.maps.event.addListener(coronaCircle, 'click', function(e){
+                    infowindow.setPosition(e.latLng);
+                    infowindow.open(map);
+                })
+
+                // coronaCircle.addListener('click', function() {
+                //   infowindow.open(map, coronaCircle);
+                // });
+
+                // if(state == "Louisiana") {
+                //   // Santa Clara County, California
+                //   county = county.substring(0, county.indexOf("County")) + "Parish";
+                //   var marker = new google.maps.Marker({
+                //     position: latLng,
+                //     map: map,
+                //     title: county + ", " + state
+                //   });
+                    
+                //   new google.maps.circe
+
+                // } else {
+                    // var marker = new google.maps.Marker({
+                    //   position: latLng,
+                    //   map: map,
+                    //   title: county + ", " + state
+                    // });
+                }
+
+                
+                }
+                
+            }
+
+            console.log(map);
+            
+
+        }
+
+    </script>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhQkl1vWPZEn09gLLPzgun6GLk3O6Szv0&callback=initMap&libraries=places,visualization">
+    </script>
+
+</body>
+</html>

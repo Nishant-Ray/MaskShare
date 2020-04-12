@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <title>MaskShare</title>
+</head>
+
+<style>
+
+    body {
+        background-color: #ff3f3f;
+        /* background: linear-gradient(90deg, rgb(13, 42, 172) 0%, rgba(0,212,255,1) 100%); */
+        background: linear-gradient(90deg, #db0000, #ff2828, #d52323, #d52323);
+        background-size: 400% 400%;
+        animation: gradient 10s ease infinite;
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        25% {
+            background-position: 50% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        75% {
+            background-position: 50% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    #wrap {
+        display: block;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        text-align: center;
+        padding: 0px 25px 0px 25px;
+        position: fixed;
+        top: 150px;
+        left: 22.5%; /* (100 - width)/2 */
+        width: 55%; /* 600 */
+        height: 30%;
+        margin: auto;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .whiteButton {
+        /* margin-left: 40%; */
+        background-color:white;
+        -webkit-border-top-left-radius:28px;
+        -moz-border-radius-topleft:28px;
+        border-top-left-radius:28px;
+        -webkit-border-top-right-radius:28px;
+        -moz-border-radius-topright:28px;
+        border-top-right-radius:28px;
+        -webkit-border-bottom-right-radius:28px;
+        -moz-border-radius-bottomright:28px;
+        border-bottom-right-radius:28px;
+        -webkit-border-bottom-left-radius:28px;
+        -moz-border-radius-bottomleft:28px;
+        border-bottom-left-radius:28px;
+        text-indent:0;
+        border:1px solid #ff2121;
+        display:inline-block;
+        color:#ff2121;
+        font-size:20px;
+        height:50px;
+        line-height:50px;
+        width:120px;
+        text-decoration:none;
+        text-align:center;
+        font-weight: bold;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .whiteButton:hover {
+        text-decoration: none;
+        color: white;
+        background-color: rgba(255, 41, 38, 0);
+        border: none;
+    }
+
+    .redButton {
+        margin-left: 35%;
+        background-color:#ff2121;
+        -webkit-border-top-left-radius:28px;
+        -moz-border-radius-topleft:28px;
+        border-top-left-radius:28px;
+        -webkit-border-top-right-radius:28px;
+        -moz-border-radius-topright:28px;
+        border-top-right-radius:28px;
+        -webkit-border-bottom-right-radius:28px;
+        -moz-border-radius-bottomright:28px;
+        border-bottom-right-radius:28px;
+        -webkit-border-bottom-left-radius:28px;
+        -moz-border-radius-bottomleft:28px;
+        border-bottom-left-radius:28px;
+        text-indent:0;
+        border: 10px blue;
+        display:inline-block;
+        color:#ffffff;
+        font-size:20px;
+        font-weight:bold;
+        font-style:normal;
+        height:50px;
+        line-height:50px;
+        width:140px;
+        text-decoration:none;
+        text-align:center;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .redButton:hover {
+        text-decoration: none;
+        color: #ff2121;
+        background-color: white;
+    }
+
+    .title {
+        /* padding-left: 30px;
+        line-height: 90px; */
+        font-size: 40px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .title:hover {
+        text-decoration: none;
+        color: white;
+    }
+
+    .header {
+        text-align: center;
+        color: white;
+        padding-bottom: 75px;
+        padding-top: 50px;
+    }
+
+    .subbody {
+        background-color: white;
+        width: 100%;
+        height: 2100px;
+        padding-top: 40px;
+    }
+
+    .card {
+        /* Add shadows to create the "card" effect */
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        width: 40%;
+        margin: auto;
+        float: left;
+    }
+
+    /* On mouse-over, add a deeper shadow */
+    .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        
+    }
+
+    /* Add some padding inside the card container */
+    .container {
+        padding: 2px 16px;
+    }
+    
+</style>
+
+<body>
+    <nav style="padding-top: 20px; padding-left: 20px;">
+        <a href="/" class="title">MaskShare</a>
+        <a href="/logout" class="whiteButton" style="float: right; margin-right: 20px;">Logout</a>
+        <a href="/virus_info" class="whiteButton" style="float: right; margin-right: 20px; width: 140px;">Virus Info</a>
+        <a href="/" class="whiteButton" style="float: right; margin-right: 20px; width: 120px;">Home</a>
+    </nav>
+
+    <div class="header">
+        <h1 style="font-size: 50px; font-weight: bold;">Mask Info</h1>
+        <h5 style="font-style: italic;">Stay up to date with all the latest information about masks.</h5>
+    </div>
+
+    <div class="subbody">
+
+        <h2 style="padding-left: 40px; padding-bottom: 20px;">How to Make your Own Masks</h2>
+        <h4 style="padding-left: 50px;">Cloth Face Masks Should</h4>
+        <ul style="padding-left: 75px; font-size: 17.5px;">
+            <li>Fit snugly but comfortably against the side of the face</li>
+            <li>Be secured with ties or ear loops</li>
+            <li>Include multiple layers of fabric</li>
+            <li>Allow for breathing without restriction</li>
+            <li>Be able to be laundered and machine dried without damage or change to shape</li>
+        </ul>
+        <br>
+        <div style="padding-left: 350px; padding-bottom: 200px;">
+            <iframe width="840" height="472.5" src="https://www.youtube.com/embed/tPx1yqvJgf4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <br>
+        <img src="/diy" alt="DIY" width="660" height="400" style="margin-top: -175px; padding-left: 60px;">
+        <img src="/tshirt" alt="tshirt" width="700" style="margin-top: -175px;">
+        <!-- <img src="/sew" alt="sew" width="700"> -->
+        <br>
+        <br>
+        <br>
+
+        <div class="card" style="margin-left: 100px;">
+            <img src="/mask" alt="Mask" style="width:90%; margin: auto; padding-top: 15px; padding-bottom: 15px;">
+            <div class="container">
+                <h4><b>Mask Up</b></h4>
+                <p>During the first months of the coronavirus pandemic, the WHO and the CDC and Prevention advised that masks were unnecessary for healthy people going about their daily lives, and should be reserved for patients, health-care workers, and others in close contact with the infected. But recently, the CDC changed its recommendations, saying that all Americans should wear cloth face coverings in public, while emphasizing that surgical and N95 masks should still be reserved for front-line workers. The change was sparked, in part, by new research showing that people without symptoms can transmit the virus, and that masks can reduce the amount of viral particles released.</p>
+                <a href="https://www.healthline.com/health/coronavirus-mask" target="_blank" class="redButton" style="margin-bottom: 20px; margin-top: 10px;">Learn More</a>
+            </div>
+        </div>
+
+        <div class="card" style="margin-left: 100px; width: 40%;">
+            <img src="/cdcmask" alt="Mask" style="width:47%; margin: auto; padding-top: 15px; padding-bottom: 15px;">
+            <div class="container">
+                <h4><b>DIY Masks</b></h4>
+                <p>CDC recommends wearing cloth face coverings in public settings where other social distancing measures are difficult to maintain (e.g., grocery stores and pharmacies), <b>especially</b> in areas of significant community-based transmission.
+
+                    CDC also advises the use of simple cloth face coverings to slow the spread of the virus and help people who may have the virus and do not know it from transmitting it to others.  Cloth face coverings fashioned from household items or made at home from common materials at low cost can be used as an additional, voluntary public health measure.
+                    
+                    Surgical masks or N-95 respirators are critical supplies that must continue to be reserved for healthcare workers and other medical first responders, as recommended by current CDC guidance.</p>
+                <a href="https://www.cdc.gov/coronavirus/2019-ncov/prevent-getting-sick/diy-cloth-face-coverings.html" target="_blank" class="redButton" style="margin-bottom: 20px; margin-top: 10px;">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background-color: rgb(56, 56, 56); height: 230px; padding-top: 50px; padding-left: 20px;">
+        <h6 style="color: white;">Made by Nishant Ray and Pranav Harakere - 2020</h6>
+        <br>
+        <h6 style="color: white; text-align: left;">References:</h6>
+        <ul style="color: white; text-align: left;">
+            <li>
+                <a href="https://www.cdc.gov/coronavirus/2019-nCoV/index.html">CDC</a>
+            </li>
+            <li>
+                <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019">WHO</a>
+            </li>
+            <li>
+                <a href="https://coronavirus.gov">Official Coronavirus Webpage</a>
+            </li>
+        </ul>
+    </footer>
+    
+</body>
