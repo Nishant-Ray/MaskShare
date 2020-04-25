@@ -22,6 +22,10 @@
             animation: gradient 10s ease infinite;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         @keyframes gradient {
             0% {
                 background-position: 0% 50%;
@@ -594,6 +598,18 @@
             color: #ff2121;
             background-color: white;
         }
+
+        .iw_table_row {
+            height: 18px;
+        }
+        .iw_attribute_name {
+            font-weight: bold;
+            text-align: right;
+        }
+        .iw_table_icon {
+            text-align: right;
+        }
+        
         
     </style>
 {% endif %}
@@ -659,15 +675,16 @@
     
         <div id="wrap">
         
-            <h3 style="padding-top: 50px; margin-left: -450px;">Welcome, {{ currentUser["name"] }}</h3>
+            <h3 style="padding-top: 50px; ">Welcome, {{ currentUser["name"] }}</h3>
             
-            <div id="selector" class="input-group mb-3" style="left: 100px; padding-top: 35px; ">
+            <div id="selector" class="input-group mb-3" style="left: 10%; padding-top: 35px; ">
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="inputGroupSelect01">What do you Want to Do?</label>
                 </div>
                 <select class="custom-select" id="inputGroupSelect01" onchange="optionSelect()" style="max-width: 400px;">
                     <option selected>Choose...</option>
                     <option value="donate">Donate to Someone</option>
+                    <option value="hospital">Find Local Hospitals</option>
                     <option value="request">Request a Donation</option>
                 </select>
             </div>
@@ -692,10 +709,63 @@
                                 Email: {{ request.get("user").get("email") }}
                             </p>
                             
-                            <h6 style="padding: 40px 0px 20px 0px;">Requested by {{ request.get("user").get("name") }} at {{ request.get("date") }}</h6>
+                            <h6 style="padding: 40px 0px 20px 0px;">Requested by {{ request.get("user").get("name") }} ({{ request.get("person") }}) at {{ request.get("date") }}</h6>
                     </div>
                     
                 {% endfor %}
+            </div>
+
+            <div id="hospitalBody" style="display: none;">
+
+
+
+                <div id="map" style="width: 90%; height: 400px; top: 50px; margin: auto;"></div>
+                <br>
+                <br>
+                <br>
+                
+
+                <div id="listing" style="cursor: pointer;">
+                    <table id="resultsTable" style="margin: auto;">
+                        <tbody id="results"></tbody>
+                    </table>
+                </div>
+
+                <div id="hospitalList" style="scroll-behavior: smooth;">
+
+                </div>
+
+                <div style="display: none">
+                    <div id="info-content">
+                        <table style="width: 300px;">
+                            <tr id="iw-url-row" class="iw_table_row">
+                                <td id="iw-icon" class="iw_table_icon"></td>
+                                <td id="iw-url"></td>
+                            </tr>
+                            <tr class="iw_table_row">
+                                <td style="visibility: hidden;">Ree</td>
+                                <td style="visibility: hidden;">Ree2</td>
+                            </tr>
+                            <tr id="iw-address-row" class="iw_table_row">
+                                <td class="iw_attribute_name" style="font-weight: bold;">Address:</td>
+                                <td id="iw-address"></td>
+                            </tr>
+                            <tr id="iw-phone-row" class="iw_table_row">
+                                <td class="iw_attribute_name" style="font-weight: bold;">Telephone:</td>
+                                <td id="iw-phone"></td>
+                            </tr>
+                            <tr id="iw-rating-row" class="iw_table_row">
+                                <td class="iw_attribute_name" style="font-weight: bold;">Rating:</td>
+                                <td id="iw-rating"></td>
+                            </tr>
+                            <tr id="iw-website-row" class="iw_table_row">
+                                <td class="iw_attribute_name" style="font-weight: bold;">Website:</td>
+                                <td id="iw-website"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
             </div>
                 
             <div id="makeRequest" style="display: none; padding-right: 50px; padding-left: 50px;">
@@ -715,12 +785,27 @@
                     </div>
                     <div class="form-group" style="text-align: left;">
                         <label for="exampleFormControlSelect1">Type of Mask</label>
-                        <select class="custom-select" id="exampleFormControlSelect1"name="type" required>
+                        <select class="custom-select" id="exampleFormControlSelect1" name="type" required>
                             <option selected disabled value="">Choose...</option>
                             <option>Homemade Cloth Masks</option>
                             <option>Surgical Masks</option>
                             <option>Face Guards</option>
                             <option>N95 Respitator Masks</option>
+                        </select>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please choose a type of mask.
+                        </div>
+                    </div>
+                    <div class="form-group" style="text-align: left;">
+                        <label for="exampleFormControlSelect1">I am...</label>
+                        <select class="custom-select" id="exampleFormControlSelect1" name="person" required>
+                            <option selected disabled value="">Choose...</option>
+                            <option>A hospital/clinic representative</option>
+                            <option>An essential service representative</option>
+                            <option>A civilian</option>
                         </select>
                         <div class="valid-feedback">
                             Looks good!
@@ -780,6 +865,21 @@
 
 
     <script>
+
+        var map, places, infoWindow, markers = [];
+        var currentMarker;
+        var cards = [[]];
+
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var labelIndex = 0;
+
+        var hostnameRegexp = new RegExp('^https?://.+?/');
+
+        var body = document.getElementById("wrap");
+
+        var bodyWidth = body.style.width;
+        var bodyHeight = body.style.height;
+        var bodyTop = body.style.top;
         
         (function() {
             'use strict';
@@ -800,28 +900,501 @@
         })();
         
         function optionSelect() {
-            var requests = document.getElementById("requestList")
-            var requestForm = document.getElementById("makeRequest")
-            var body = document.getElementById("wrap");
+            var requests = document.getElementById("requestList");
+            var requestForm = document.getElementById("makeRequest");
+            var hospitals = document.getElementById("hospitalBody")
+            
+            var selector = document.getElementById("selector");
+
             var option = document.getElementById("inputGroupSelect01").value;
             
             if (option == "donate") {
-                body.style.height = "70%"
-                body.style.top = "130px"
+                body.style.width = bodyWidth;
+                body.style.left = "22.5%";
+                body.style.height = "70%";
+                body.style.top = "130px";
                 requests.style.display = "block";
-                requestForm.style.display = "none"
+                requestForm.style.display = "none";
+                hospitals.style.display = "none";
+                selector.style.left = "10%";
             } else if(option == "request") {
-                body.style.height = "70%"
-                body.style.top = "130px"
+                body.style.width = bodyWidth;
+                body.style.left = "22.5%";
+                body.style.height = "70%";
+                body.style.top = "130px";
                 requests.style.display = "none";
                 requestForm.style.display = "block"
-            } else {
-                body.style.height = "30%"
+                hospitals.style.display = "none";
+                selector.style.left = "10%";
+            } else if(option == "hospital") {
+                body.style.height = "70%";
+                body.style.width = "65%";
+                body.style.left = "17.5%";
+                body.style.top = "130px";
+                hospitals.style.display = "block";
                 requests.style.display = "none";
-                requestForm.style.display = "none"
+                requestForm.style.display = "none";
+                selector.style.left = "17.5%";
+
+                located();
+                // if (navigator.geolocation) {
+                    
+                //     navigator.geolocation.getCurrentPosition(located);
+                    
+                // } else { 
+                //     console.log("Geolocation is not supported by this browser.");
+                // }
+
+            } else {
+                body.style.height = bodyHeight;
+                body.style.width = bodyWidth;
+                body.style.top = bodyTop;
+                body.style.left = "22.5%";
+                requests.style.display = "none";
+                requestForm.style.display = "none";
+                hospitals.style.display = "none";
+                selector.style.left = "10%";
             }
             
         }
+
+        function initMap(){
+            us = {
+                center: {lat: 37.1, lng: -95.7},
+                zoom: 3
+            }
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: us.zoom,
+                center: us.center,
+                mapTypeControl: true,
+                panControl: true,
+                zoomControl: true,
+                streetViewControl: true
+            });
+
+            places = new google.maps.places.PlacesService(map);
+
+            infoWindow = new google.maps.InfoWindow({
+                content: document.getElementById('info-content')
+            });
+
+        }
+
+        function located(){
+            
+            //var pos = {lat: position.coords.latitude, lng: position.coords.longitude};
+            var pos = {lat: 40.712776, lng: -74.005974};
+
+            map.setCenter(pos)
+            map.setZoom(10)
+
+            var search = {
+                location: pos,
+                radius: 50000,
+                types: ['hospital']
+            };
+            
+            
+            places.nearbySearch(search, function(results, status) {
+                
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    clearMarkers();
+                    
+                    for (let i = 0; i < results.length; i++) {
+                        
+                        if (results[i].name.indexOf("M.D.") != -1) {
+                            continue;
+                        }
+
+                        markers[i] = new google.maps.Marker({
+                            position: results[i].geometry.location,
+                            label: labels[labelIndex++ % labels.length],
+                            map: map
+                        });
+
+                        markers[i].placeResult = results[i];
+                        //var marker = markers[i];
+                        currentMarker = markers[i];
+                        //console.log(currentMarker.placeResult.name);
+                        
+                        setTimeout(addResult, 500 * i, currentMarker);
+
+                        google.maps.event.addListener(markers[i], 'click', scroll);
+
+                        // setTimeout(function() { 
+
+                        //     places.getDetails({placeId: currentMarker.placeResult.place_id},
+                        //         function(place, status) {
+                        //             //console.log(place.name);
+                                    
+                        //             if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                        //                 console.log(currentMarker.placeResult.name + " --> Failed Card Creation: " + status);
+                                        
+                        //                 //return;
+                        //             } else {
+                        //                 createCard(place);
+                        //             }
+                        //         }
+                        //     );
+
+                        // }, 2000 * i);
+
+                        //addResult(markers[i]);
+                        //google.maps.event.addListener(markers[i], 'click', showInfoWindow);
+                        
+                    }
+                    //console.log(results.length);
+                    
+                }
+                
+            });
+
+
+        }
+
+        function addResult(marker) {
+
+            //console.log(marker.placeResult.name)
+
+            // var attempts = 0;
+            // var success = false;
+            // var delay = 0;
+            // while (!success && attempts < 5){
+
+            //     if(attempts != 0) delay = 2000;
+
+            //     attempts++;
+
+            //     setTimeout(
+            //         function(){
+
+                        places.getDetails({placeId: marker.placeResult.place_id},
+                            function(place, status) {
+                                if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                                    console.log(marker.placeResult.name + " --> Failed Card Creation: " + status);
+                                    
+                                    //continue;
+                                    return;
+                                }
+                                createCard(place);
+                                //success = true;
+                            }
+                        );
+
+            //         }, 
+            //     delay * attempts);
+            // }
+
+            // if(attempts == 5) {
+            //     console.log(result.name + " --> Failed Card Creation: OVER_QUERY_LIMIT");
+            // }
+
+        }
+
+        function createCard(place){
+
+            var listBody = document.getElementById("hospitalList");
+
+            var card = document.createElement("div");
+            card.setAttribute("class", "request");
+            card.style.height = "400px";
+            card.style.width = "90%";
+            card.style.marginTop = "50px";
+            card.style.marginBottom = "50px";
+
+            var leftColumn = document.createElement("div");
+            leftColumn.style.whiteSpace = "nowrap";
+            leftColumn.style.overflowX = "hidden";
+            leftColumn.style.overflowY = "hidden";
+
+            //leftColumn.style.float = "left";
+
+            var title = document.createElement("h5");
+            title.innerText = place.name;
+            //title.style.display = "inline-block";
+            leftColumn.appendChild(title);
+
+
+            var content = document.createElement("p");
+            // var contentStr = '<b>Address: </b><a href="' + place.url + '" style="color: lightblue;">' + place.vicinity + '</a> <br>' + 
+            //              '<b>Phone Number: </b>' + place.formatted_phone_number + '<br>' +
+            //              '<b>Website: </b><a href="' + website + '" style="color: lightblue;">' + website + '</a> <br>' + 
+            //              '<b>Rating: </b>' + ratingHtml + ' (' + place.user_ratings_total + ' reviews)<br>' +
+            //              '<b>Opening Hours: </b><br>';
+
+            var contentStr = "";
+
+            if(place.url && place.vicinity) {
+                contentStr += '<b>Address: </b><a href="' + place.url + '" style="color: lightblue;">' + place.vicinity + '</a> <br>';
+            }
+
+            if(place.formatted_phone_number) {
+                contentStr += '<b>Phone Number: </b>' + place.formatted_phone_number + '<br>';
+            }
+
+            if(place.website) {
+                var website = hostnameRegexp.exec(place.website);
+                if (website === null) {
+                    website = 'http://' + place.website + '/';
+                }
+                contentStr += '<b>Website: </b><a href="' + website + '" style="color: lightblue;">' + website + '</a> <br>';
+            }
+
+            if(place.rating) {
+                var ratingHtml = '';
+                for (var i = 0; i < 5; i++) {
+                    if (place.rating < (i + 0.5)) {
+                        ratingHtml += '&#10025;';
+                    } else {
+                        ratingHtml += '&#10029;';
+                    }
+                }
+                contentStr += '<b>Rating: </b>' + ratingHtml + ' (' + place.user_ratings_total + ' reviews)<br>';
+            }
+            var sameHours = true;
+            if(place.opening_hours) {
+                contentStr += '<b>Opening Hours: </b><br>';
+
+                var openingHours = "";
+                
+                var hours = [];
+
+                for (var i = 0; i < place.opening_hours.weekday_text.length; i++) {
+                    hours[i] = place.opening_hours.weekday_text[i];
+
+                    if(i - 1 >= 0 && hours[i].substring(hours[i].indexOf(":") + 2) != hours[i - 1].substring(hours[i - 1].indexOf(":") + 2)){
+                        sameHours = false;
+                        break;
+                    }
+
+                    // openingHours += " - " + hours[i] + '<br>';
+                }
+
+                if(!sameHours){
+                    for (var i = 0; i < place.opening_hours.weekday_text.length; i++) {
+                        var hour = place.opening_hours.weekday_text[i];
+
+                        openingHours += " - " + hour + '<br>';
+                    }
+                } else {
+                    var hour = place.opening_hours.weekday_text[0];
+                    hour = hour.substring(hour.indexOf(": ") + 2);
+
+                    if(hour === "Open 24 hours"){
+                        openingHours = " - Open 24 hours daily"
+                    } else {
+                        openingHours = " - " + hour + " daily"
+                    }
+
+                    card.style.height = "240px";
+                }
+
+                contentStr += openingHours;
+
+            } else {
+                card.style.height = "250px";
+            }
+
+            
+            content.innerHTML = contentStr;
+            content.style.display = "inline-block";
+            leftColumn.appendChild(content);
+
+            if(place.photos) {
+                var photoUrl = (place.photos)[0].getUrl();
+                var photoWidth = (place.photos)[0].width;
+                var photoHeight = (place.photos)[0].height;
+
+                var landscape = true;
+
+                for(var i = 0; i < place.photos.length; i++){
+                    var photo = (place.photos)[i];
+
+                    if(photoWidth > photoHeight) {
+                        photoUrl = photo.getUrl();
+                        photoWidth = photo.width;
+                        photoHeight = photo.height;
+                        break;
+                    } else if(i == place.photos.length - 1) {
+                        landscape = false;
+                        //console.log(place.name + " --> All photos are portrait")
+                        var urls = []
+                        for (let j = 0; j < place.photos.length; j++) {
+                            const element = place.photos[j];
+                            urls.push(element.getUrl())
+                        }
+                        //console.log(place.name);
+                        //console.log(urls);
+                        
+                    }
+                }
+
+                var scaleFactor;
+
+                //if(place.opening_hours){
+                    if(landscape) scaleFactor = photoWidth / 300;
+                    else scaleFactor = photoHeight / 350;
+                // } else {
+                //     scaleFactor = photoHeight / 200;
+                // }
+                
+                
+
+                photoWidth /= scaleFactor;
+                photoHeight /= scaleFactor;
+
+
+                var picture = document.createElement("img");
+                picture.setAttribute("src", photoUrl);
+                picture.style.display = "inline-block";
+                picture.style.width = (photoWidth + "px");
+                picture.style.height = (photoHeight + "px");
+
+                if(place.opening_hours){
+                    if(landscape && sameHours) {
+                        //picture.style.alignSelf = "right";
+                        picture.style.marginTop = "-200px";
+                        picture.style.marginLeft = "100px";
+                    } else if(landscape) {
+                        picture.style.marginTop = "-325px";
+                        picture.style.marginLeft = "100px";
+                    } 
+                    else {
+                        picture.style.marginTop = "-325px";
+                        picture.style.marginLeft = "150px";
+                    }
+                } else {
+                    if(landscape) {
+                        picture.style.marginTop = "-125px";
+                        picture.style.marginLeft = "150px";
+                    } else {
+                        picture.style.marginTop = "-125px";
+                        picture.style.marginLeft = "150px";
+                    }
+                }
+
+                
+                leftColumn.appendChild(picture);
+
+            } else {
+                console.log("No photos found: " + place.name);
+                
+            }
+
+            
+            
+            // var address = document.createElement("p");
+            // //var url = "https://www.google.com/maps/search/?api=1&query=" + place.geometry.location + "&query_place_id=" + place.place_id;
+            // address.innerHTML = '<b>Address: </b><a href="' + place.url + '" style="color: lightblue;">' + place.vicinity + '</a>';
+            // card.appendChild(address);
+
+            // var phoneNum = document.createElement("p");
+            // phoneNum.innerHTML = '<b>Phone Number: </b>' + place.formatted_phone_number;
+            // card.appendChild(phoneNum);
+
+            // var p = document.createElement("p");
+            // p.textContent = "hello";
+            // card.append(p);
+
+            card.appendChild(leftColumn);
+
+            listBody.appendChild(card);
+
+            var cardArr = [card, place.name];
+            cards.push(cardArr);
+        }
+
+        function scroll(){
+            var marker = this;
+
+            for (let i = 0; i < cards.length; i++) {
+                
+                if(marker.placeResult.name === cards[i][1]) {
+                    cards[i][0].scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                    return;
+                }
+                
+            }
+
+        }
+
+        function showInfoWindow() {
+            var marker = this;
+            places.getDetails({placeId: marker.placeResult.place_id},
+                function(place, status) {
+                    if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                        console.log(place.name + " --> Failed Info Window: " + status);
+                        return;
+                    }
+                    infoWindow.open(map, marker);
+                    buildIWContent(place);
+                }
+            );
+        }
+
+        // Load the place information into the HTML elements used by the info window.
+        function buildIWContent(place) {
+            document.getElementById('iw-icon').innerHTML = '<img class="hotelIcon" ' + 'src="' + place.icon + '" style="width: 25px"/>';
+            document.getElementById('iw-url').innerHTML = '<b><a href="' + place.url + '">' + place.name + '</a></b>';
+            document.getElementById('iw-address').textContent = place.vicinity;
+
+            if (place.formatted_phone_number) {
+                document.getElementById('iw-phone-row').style.display = '';
+                document.getElementById('iw-phone').textContent = place.formatted_phone_number;
+            } else {
+                document.getElementById('iw-phone-row').style.display = 'none';
+            }
+
+            // Assign a five-star rating to the hotel, using a black star ('&#10029;')
+            // to indicate the rating the hotel has earned, and a white star ('&#10025;')
+            // for the rating points not achieved.
+            if (place.rating) {
+                var ratingHtml = '';
+                for (var i = 0; i < 5; i++) {
+                    if (place.rating < (i + 0.5)) {
+                        ratingHtml += '&#10025;';
+                    } else {
+                        ratingHtml += '&#10029;';
+                    }
+                document.getElementById('iw-rating-row').style.display = '';
+                document.getElementById('iw-rating').innerHTML = ratingHtml;
+                }
+            } else {
+                document.getElementById('iw-rating-row').style.display = 'none';
+            }
+
+            // The regexp isolates the first part of the URL (domain plus subdomain)
+            // to give a short URL for displaying in the info window.
+            if (place.website) {
+                var fullUrl = place.website;
+                var website = hostnameRegexp.exec(place.website);
+                if (website === null) {
+                    website = 'http://' + place.website + '/';
+                    fullUrl = website;
+                }
+                document.getElementById('iw-website-row').style.display = '';
+                document.getElementById('iw-website').innerHTML = '<a href="' + website + '">' + website + '</a>';
+                //textContent = website;
+                
+                document.getElementById('iw-url').innerHTML = '<b><a href="' + place.url + '">' + place.name + '</a></b>';
+
+            } else {
+                document.getElementById('iw-website-row').style.display = 'none';
+            }
+        }
+
+
+        function clearMarkers(){
+            for (var i = 0; i < markers.length; i++) {
+                const marker = markers[i];
+                if(marker) {
+                    marker.setMap(null);
+                }
+            }
+            markers = [];
+        }
+
         
         function addElement(parentId, elementTag, elementId, html) {
             // Adds an element to the document
@@ -840,7 +1413,9 @@
         
     </script>
     
-    
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhQkl1vWPZEn09gLLPzgun6GLk3O6Szv0&callback=initMap&libraries=places,visualization">
+    </script>
     
     
     

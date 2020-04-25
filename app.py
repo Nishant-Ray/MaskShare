@@ -56,16 +56,18 @@ requests = []
 req = {
     "user": owner,
     "title": "Hospital Requires Respirators",
-    "quan": "7",
+    "quan": "10",
     "type": "N95 Respirators",
+    "person": "A hospital/clinic representative",
     "date": timeStr
 }
 requests.append(req)
 req2 = {
     "user": owner,
     "title": "I Need Masks",
-    "quan": "24",
+    "quan": "3",
     "type": "Surgical Masks",
+    "person": "A civilian",
     "date": timeStr
 }
 requests.append(req2)
@@ -82,6 +84,7 @@ def index():
             "title": request.form["item_name"],
             "quan": request.form["item_quantity"],
             "type": request.form["type"],
+            "person": request.form["person"],
             "date": getCurrentTime()
         }
 
